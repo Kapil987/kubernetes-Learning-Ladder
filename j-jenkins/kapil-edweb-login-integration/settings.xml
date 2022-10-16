@@ -9,7 +9,7 @@
     </server>
     <server>
       <username>youremail@email.com</username>
-      <password>artifactory_token/password_preferred_encrypted_credentials</password>
+      <password>artifactory_token/password_preferred_encrypted_cred</password>
       <id>snapshots</id>
     </server>
   </servers>
