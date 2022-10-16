@@ -1,0 +1,38 @@
+# 4. Deploy agent pod
+FROM amazonlinux
+
+# install required packages
+RUN yum install wget tar git gzip -y
+
+# Make required directories
+RUN mkdir /root/.ssh && \
+    mkdir -p /opt/java && \
+    mkdir /opt/app
+
+# Clone bit-bucket repo from POD
+COPY ./id_rsa /root/.ssh/id_rsa
+RUN chmod -R 700 /root/.ssh && \
+    chown -R root:root /root/.ssh && \
+    chmod 600 /root/.ssh/id_rsa && \
+# ssh-keyscan is used to avoid prompt to add host in known_hosts file
+    ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
+#    git clone git@bitbucket.org:kapilhsr/java-login-app.git /opt/app
+
+# Installing kubectl, check if /usr/local/bin is by default in path variable
+RUN curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin
+
+# Helm installation
+RUN wget https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz && \
+    tar -xzf helm-v3.10.0-linux-amd64.tar.gz -C /tmp && \
+    mv /tmp/linux-amd64/helm /usr/local/bin/ && \
+    rm helm-v3.10.0-linux-amd64.tar.gz
+
+RUN /usr/local/bin/helm plugin install https://github.com/belitre/helm-push-artifactory-plugin --version v0.3.0
+WORKDIR /opt/app
+CMD ["docker","-g","daemon off"]
+
+## Notes
+# 1. id_rs is copied to the image everytime it should be able to pull the source code from dev or prod env
+# 

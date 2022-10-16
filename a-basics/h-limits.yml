@@ -1,0 +1,39 @@
+# cpu: in milliseconds, 1 processor = "1000m"
+# memory: 400m = 0.4 bytes, 400M = 400 megabytes, 400Mi = 400 mebibytes, 1G = 953.67 mebibytes
+# request: when starting
+# limit: max limit of resouce consumption
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: docker.io/nginx:1.18
+        resources:
+          requests:
+            memory: "64Mi" # make all 1 and see it failing in logs
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80 # if it fails: it will be visible in log else not
+        livenessProbe:
+          tcpSocket:
+            port: 80 # if it fails: it will be visible in log else not

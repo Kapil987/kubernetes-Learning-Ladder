@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-nodeport # Name of the service
+  labels:
+    app: myapp-nodeport
+spec:
+  selector: # forward traffic to the label matching Pods, All label should match
+    app: login
+    env: dev # Name of the label/s of your Pods
+  
+  type: NodePort
+  ports:
+  - port: 90 # Service running on
+    nodePort: 31000
+    targetPort: 80 # Forward to tomcat/any container

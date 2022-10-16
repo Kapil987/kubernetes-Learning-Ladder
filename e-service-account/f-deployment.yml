@@ -1,0 +1,30 @@
+# Deploy Deployment workload resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dev
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login
+      # env: dev
+    matchExpressions:
+      - {key: env, operator: In, values: [dev]}
+
+  template:
+    metadata:
+      name: webapp # name of your Pod
+      labels:
+        app: login
+        env: dev
+    spec:
+      serviceAccountName: test-svc-acc-01
+      automountServiceAccountToken: true
+      containers:
+      - name: webapp-httpd # name of your container
+        image: dpthub/edkubectl:1.0
+        ports:
+        - containerPort: 80
+

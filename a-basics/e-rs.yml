@@ -1,0 +1,28 @@
+# implementing below with t2.micro and create replicas more than 1 will fail
+# Deploy ReplicaSet workload resources
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: app-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: login
+      # env: dev
+    matchExpressions:
+      - {key: env, operator: In, values: [dev]}
+
+  template:
+    metadata:
+      name: webapp # name of your Pod
+      labels:
+        app: login
+        env: dev
+    spec:
+      containers:
+      - name: webapp-httpd # name of your container
+        image: httpd
+        ports:
+        - containerPort: 80
+

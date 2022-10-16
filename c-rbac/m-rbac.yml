@@ -1,0 +1,9 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader # list-pods can be anything
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"] # to which resource you would like to grant the permission
+  verbs: ["get", "watch", "list"]

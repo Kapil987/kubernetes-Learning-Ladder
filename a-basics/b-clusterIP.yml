@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service # Name of the service
+  labels:
+    app: myapp-service
+spec:
+  selector: # forward traffic to the label matching Pods, All label should match
+    app: login # Name of the label/s of your Pods
+    env: dev
+  
+  type: ClusterIP
+  ports:
+  - port: 8080 # Listen on
+    targetPort: 80 # Forward to tomcat/any container

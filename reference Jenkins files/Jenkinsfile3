@@ -1,0 +1,40 @@
+def namespace = "default"
+def service_account = "jenkins-agent-sa"
+def label = "build"
+
+podTemplate(
+    name: label,
+    label: label,
+    namespace: namespace,
+    serviceAccount: service_account,
+    containers: [
+        containerTemplate(
+            name: "build",
+            image: "kapil0123/jenkins-build-agent:1.0",
+            command: 'cat',
+            // args: '99d',
+            ttyEnabled: true,
+            workingDir: "/home/jenkins",
+            alwaysPullImage: false,
+        )
+    ]
+)
+
+{
+    node(label){
+        stage ('Checkout SCM'){
+            //git url: 'https://kapilhsr@bitbucket.org/kapilhsr/java-login-app.git'
+            git url: 'git@bitbucket.org:kapilhsr/java-login-app.git'
+            //git url: 'https://dptrealtime@bitbucket.org/dptrealtime/loginapp-cicd-deployment.git', branch: 'dev'
+            container('build') {
+                stage('Build a Maven project') {
+                    // sh '/opt/maven/bin/mvn package'
+                    sh 'mvn clean package'
+                }
+            }
+        }
+    }
+}
+
+// service_account = "jenkins-agent-sa" is pre-requisite 
+// node(label) node(POD_LABEL)

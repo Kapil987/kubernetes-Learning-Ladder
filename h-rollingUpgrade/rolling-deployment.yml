@@ -1,0 +1,32 @@
+# Deploy Deployment workload resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-2-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: login
+    matchExpressions:
+      - {key: env, operator: In, values: [dev]}
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+
+  template:
+    metadata:
+      name: webapp # name of your Pod
+      labels:
+        app: login
+        env: dev
+    spec:
+      containers:
+      - name: webapp-nginx # name of your container
+        image: httpd:2 # version available on dockerhub 2 and 2.4
+        ports:
+        - containerPort: 80
+

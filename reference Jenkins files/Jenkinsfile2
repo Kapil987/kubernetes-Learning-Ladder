@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+
+  stages {
+      stage('SCM-Checkout') {
+          steps {
+              git branch: 'dev',
+                  credentialsId: 'myrepocred',
+                  url: 'https://myrepo@bitbucket.org/kubernetes.git'
+          }
+      }
+        stage('Docker build') {
+            steps {
+                dir("/root/temp/myfolder/src/amf/build") {
+                    sh 'docker build -t testDocker .'
+                }
+              
+          }
+      }
+
+  }
+}

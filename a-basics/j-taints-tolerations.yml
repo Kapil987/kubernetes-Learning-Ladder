@@ -1,0 +1,36 @@
+# Taints and Tolerations
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: docker.io/nginx:1.18
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      # matched taint will be first preference else it will try to schedule somewhere else
+      # taint was configured in terraform to demonstrate this example
+      tolerations:
+        - key: "frontend"
+          operator: "Equal"
+          value: "yes"
+          effect: "NoSchedule"

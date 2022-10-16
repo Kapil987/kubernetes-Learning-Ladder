@@ -1,0 +1,68 @@
+# Creating dev and qa namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qa
+---
+# Deploy Deployment workload resources in Dev Namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-rs-dev
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login
+    matchExpressions:
+      - {key: env, operator: In, values: [dev]}
+
+  template:
+    metadata:
+      name: webapp # name of your Pod
+      labels:
+        app: login
+        env: dev
+    spec:
+      containers:
+      - name: webapp-httpd # name of your container
+        image: httpd
+        ports:
+        - containerPort: 80
+
+---
+# Deploy Deployment workload resources in qa Namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-rs-qa
+  namespace: qa
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: login
+    matchExpressions:
+      - {key: env, operator: In, values: [qa]}
+
+  template:
+    metadata:
+      name: webapp # name of your Pod
+      labels:
+        app: login
+        env: qa
+    spec:
+      containers:
+      - name: webapp-httpd # name of your container
+        image: httpd
+        ports:
+        - containerPort: 80
+
+
+

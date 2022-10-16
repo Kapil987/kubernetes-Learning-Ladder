@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+
+  stages {
+      stage('SCM-Checkout') {
+          steps {
+              git branch: 'dev',
+                  credentialsId: 'abhi_repo',
+                  url: 'https://abhishekagg3@bitbucket.org/5g_cps_team/5g_cps.git'
+          }
+      }
+        stage('Docker build') {
+            steps {
+                dir("./folder/src/amf/build/") {
+                    sh './build_docker.sh'
+                }
+              
+          }
+      }
+
+  }
+}

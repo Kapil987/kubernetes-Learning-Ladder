@@ -1,0 +1,13 @@
+# Create a simple Pod, kind: po autocompele
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp # name of your Pod
+  labels:
+    app: login
+    env: dev
+spec:
+  containers:
+    - name: app1 # name of your container
+      image: httpd # image name
+
