@@ -1,0 +1,13 @@
+deployment:
+  replicaCount: 1
+  image: kapil0123/webapp
+resources:
+  requests:
+    cpu: "250m"
+    memory: "64Mi"
+  limits:
+    cpu: "500m"
+    memory: "128Mi"
+service:
+  port: 8080
+

@@ -1,0 +1,40 @@
+  def label = "deploy"
+  podTemplate(label: label, yaml: """
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    labels:
+      name: deploy
+  spec:
+    serviceAccount: jenkins-agent-sa
+    containers:
+    - name: deploy
+      image: kapil0123/jenkins-deploy-agent
+      command:
+      - cat
+      tty: true
+  """
+  ) {
+      node (label) {
+
+          stage ('Checkout SCM'){
+            git url: 'https://kapilhsr@bitbucket.org/kapilhsr/kapil-edweb-login-deployment.git', branch: 'dev'
+          }
+
+          stage ('Helm Chart') {
+            container('deploy') {
+              dir('charts') {
+                withCredentials([usernamePassword(credentialsId: 'jfrog', usernameVariable: 'username', passwordVariable: 'password')]) {
+                      sh '/usr/local/bin/helm repo add dptweb-helm-local  https://sharedevops.jfrog.io/artifactory/dptweb-helm-local/ --username $username --password $password'
+                      sh "/usr/local/bin/helm repo update"
+                      // sh 'helm pull dptweb-helm-local/webapp --untar'
+                      sh 'ls -l'
+                      sh "/usr/local/bin/helm install dptweb-dev dptweb-helm-local/webapp --namespace dev -f values.yaml"
+                      sh "/usr/local/bin/helm list -a --namespace dev"
+                      sh 'kubectl get po -n dev'
+                }
+              }
+          }
+          }
+      }
+  }
