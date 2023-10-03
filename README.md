@@ -1,5 +1,5 @@
 # Kubernetes Learning Ladder
-![alt text](https://media-exp1.licdn.com/dms/image/C4E12AQHnAzSnsKQXCQ/article-cover_image-shrink_600_2000/0/1592713747615?e=1669248000&v=beta&t=7EgtkTkloo9I_bxFlubfT0NLv2xNO9NsGCHxH7SZQUE)
+![alt text](https://github.com/Kapil987/kubernetes-Learning-Ladder/blob/a9c3f6810a30bb739bce61209c500e7140ebae91/cdKubernetes.png)
 
 ## Description
 Kubernetes is an open-source container orchestration system for automating software deployment, scaling, and management
